@@ -1,0 +1,9 @@
+Package: com.afiq.doubletaptolock
+Name: doubletaptolock
+Depends: mobilesubstrate
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: Double tap homescreen to lock device
+Maintainer: afiq
+Author: afiq
+Section: Tweaks
