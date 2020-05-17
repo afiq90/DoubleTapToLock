@@ -15,7 +15,7 @@
 		<key>isController</key>
 		<true/>
 		<key>label</key>
-		<string>dtlpreferences</string>
+		<string>DoubleTapToLock</string>
 	</dict>
 </dict>
 </plist>
