@@ -8,6 +8,8 @@ TWEAK_NAME = doubletaptolock
 
 doubletaptolock_FILES = Tweak.x
 doubletaptolock_CFLAGS = -fobjc-arc
+doubletaptolock_EXTRA_FRAMEWORKS += Cephei
+
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 SUBPROJECTS += dtlpreferences

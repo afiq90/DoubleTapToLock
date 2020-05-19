@@ -1,4 +1,5 @@
-#import <spawn.h>
+#import <Cephei/HBPreferences.h>
+
 
 @interface SBIconController: UIViewController
 +(id)sharedInstance;
@@ -16,8 +17,11 @@
 @end
 
 UITapGestureRecognizer *tapGesture;
+BOOL isEnabled;
+HBPreferences *prefs;
 
 %hook SBHomeScreenViewController
+
 -(void)viewDidLoad {
 
 	%orig;
@@ -33,17 +37,28 @@ UITapGestureRecognizer *tapGesture;
 		[self.view addGestureRecognizer: tapGesture];
 	}
 
-	NSDictionary *bundleDefaults = [[NSUserDefaults standardUserDefaults] persistentDomainForName:@"com.afiq.dtlpreferences"];
-	id isEnable = [bundleDefaults valueForKey:@"isEnable"];
-	NSLog(@"%@", isEnable);
-	if ([isEnable isEqual:@0]) {
-		tapGesture.enabled = NO;
+	// NSDictionary *bundleDefaults = [[NSUserDefaults standardUserDefaults] persistentDomainForName:@"com.afiq.dtlpreferences"];
+	// id isEnable = [bundleDefaults valueForKey:@"isEnable"];
+	// if ([isEnable isEqual:@0]) {
+	// 	tapGesture.enabled = NO;
+	// 	[redRectangle setBackgroundColor:[UIColor redColor]];
+	// 	statusLabel.text = @"OFF";
+	// } else {
+	// 	tapGesture.enabled = YES;
+	// 	[redRectangle setBackgroundColor:[UIColor greenColor]];
+	// 	statusLabel.text = @"ON";
+	// }
+
+	NSLog(@"Am I enabled? %i", isEnabled);
+	
+	if (isEnabled) {
+		// tapGesture.enabled = NO;
 		[redRectangle setBackgroundColor:[UIColor redColor]];
-		statusLabel.text = @"OFF";
-	} else {
-		tapGesture.enabled = YES;
-		[redRectangle setBackgroundColor:[UIColor greenColor]];
 		statusLabel.text = @"ON";
+	} else {
+		// tapGesture.enabled = YES;
+		[redRectangle setBackgroundColor:[UIColor greenColor]];
+		statusLabel.text = @"OFF";
 	}
 
 	[redRectangle addSubview:statusLabel];
@@ -67,3 +82,9 @@ UITapGestureRecognizer *tapGesture;
 }
 
 %end
+
+%ctor {
+	prefs = [[HBPreferences alloc] initWithIdentifier:@"com.afiq.dtlpreferences"];
+	[prefs registerBool:&isEnabled default:YES forKey:@"isEnabled"];
+	%init;
+}
