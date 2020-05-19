@@ -21,10 +21,13 @@ UITapGestureRecognizer *tapGesture;
 BOOL isEnabled;
 HBPreferences *prefs;
 
-NSInteger prefsVariable;
 static void loadPrefs() {
-	NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:PLIST_PATH];
-	prefsVariable = [[prefs objectForKey:@"isEnabled"] intValue];
+	NSDictionary *prefs = [[NSDictionary alloc] initWithContentsOfFile:PLIST_PATH];
+	// if(prefs) {
+	// 	isEnabled = [[prefs objectForKey:@"isEnabled"] boolValue];
+	// }
+	isEnabled = [[prefs objectForKey:@"isEnabled"] boolValue];
+
 }
 
 %hook SBHomeScreenViewController
@@ -56,14 +59,14 @@ static void loadPrefs() {
 	// 	statusLabel.text = @"ON";
 	// }
 
-	// NSLog(@"Am I enabled? %i", prefsVariable);
+	NSLog(@"Am I enabled? %i", isEnabled);
 	
-	if (prefsVariable == 1) {
-		// tapGesture.enabled = NO;
+	if (isEnabled) {
+		tapGesture.enabled = YES;
 		[redRectangle setBackgroundColor:[UIColor redColor]];
 		statusLabel.text = @"ON";
 	} else {
-		// tapGesture.enabled = YES;
+		tapGesture.enabled = NO;
 		[redRectangle setBackgroundColor:[UIColor greenColor]];
 		statusLabel.text = @"OFF";
 	}
@@ -95,6 +98,6 @@ static void loadPrefs() {
 	// [prefs registerBool:&isEnabled default:YES forKey:@"isEnabled"];
 	// %init;
 	loadPrefs();
-    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("com.afiq.dtlpreferences/ReloadPrefs"), NULL, CFNotificationSuspensionBehaviorCoalesce);
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("com.afiq.dtlpreferences.ReloadPrefs"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 
 }

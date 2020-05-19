@@ -22,10 +22,13 @@ UITapGestureRecognizer *tapGesture;
 BOOL isEnabled;
 HBPreferences *prefs;
 
-NSInteger prefsVariable;
 static void loadPrefs() {
-	NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:PLIST_PATH];
-	prefsVariable = [[prefs objectForKey:@"isEnabled"] intValue];
+	NSDictionary *prefs = [[NSDictionary alloc] initWithContentsOfFile:PLIST_PATH];
+	
+	
+	
+	isEnabled = [[prefs objectForKey:@"isEnabled"] boolValue];
+
 }
 
 
@@ -49,10 +52,10 @@ static void loadPrefs() {
 #define _LOGOS_RETURN_RETAINED
 #endif
 
-@class SBIconController; @class SBHomeScreenViewController; @class SpringBoard; 
+@class SBHomeScreenViewController; @class SBIconController; @class SpringBoard; 
 static void (*_logos_orig$_ungrouped$SBHomeScreenViewController$viewDidLoad)(_LOGOS_SELF_TYPE_NORMAL SBHomeScreenViewController* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$SBHomeScreenViewController$viewDidLoad(_LOGOS_SELF_TYPE_NORMAL SBHomeScreenViewController* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$SBHomeScreenViewController$lockDevice(_LOGOS_SELF_TYPE_NORMAL SBHomeScreenViewController* _LOGOS_SELF_CONST, SEL); 
 static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBIconController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBIconController"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SpringBoard(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SpringBoard"); } return _klass; }
-#line 30 "Tweak.x"
+#line 33 "Tweak.x"
 
 
 static void _logos_method$_ungrouped$SBHomeScreenViewController$viewDidLoad(_LOGOS_SELF_TYPE_NORMAL SBHomeScreenViewController* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
@@ -67,7 +70,7 @@ static void _logos_method$_ungrouped$SBHomeScreenViewController$viewDidLoad(_LOG
 	if(tapGesture == nil) {
 		tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(lockDevice)];
 		tapGesture.numberOfTapsRequired = 2;
-		[self.view addGestureRecognizer: tapGesture];
+		[self.view addGestureRecognizer:tapGesture];
 	}
 
 	
@@ -82,14 +85,14 @@ static void _logos_method$_ungrouped$SBHomeScreenViewController$viewDidLoad(_LOG
 	
 	
 
+	NSLog(@"Am I enabled? %i", isEnabled);
 	
-	
-	if (prefsVariable == 1) {
-		
+	if (isEnabled) {
+		tapGesture.enabled = YES;
 		[redRectangle setBackgroundColor:[UIColor redColor]];
 		statusLabel.text = @"ON";
 	} else {
-		
+		tapGesture.enabled = NO;
 		[redRectangle setBackgroundColor:[UIColor greenColor]];
 		statusLabel.text = @"OFF";
 	}
@@ -116,14 +119,14 @@ static void _logos_method$_ungrouped$SBHomeScreenViewController$lockDevice(_LOGO
 
 
 
-static __attribute__((constructor)) void _logosLocalCtor_f3fcdf02(int __unused argc, char __unused **argv, char __unused **envp) {
+static __attribute__((constructor)) void _logosLocalCtor_3b78f0bd(int __unused argc, char __unused **argv, char __unused **envp) {
 	
 	
 	
 	loadPrefs();
-    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("com.afiq.dtlpreferences/ReloadPrefs"), NULL, CFNotificationSuspensionBehaviorCoalesce);
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("com.afiq.dtlpreferences.ReloadPrefs"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 
 }
 static __attribute__((constructor)) void _logosLocalInit() {
 {Class _logos_class$_ungrouped$SBHomeScreenViewController = objc_getClass("SBHomeScreenViewController"); MSHookMessageEx(_logos_class$_ungrouped$SBHomeScreenViewController, @selector(viewDidLoad), (IMP)&_logos_method$_ungrouped$SBHomeScreenViewController$viewDidLoad, (IMP*)&_logos_orig$_ungrouped$SBHomeScreenViewController$viewDidLoad);{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'v'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$SBHomeScreenViewController, @selector(lockDevice), (IMP)&_logos_method$_ungrouped$SBHomeScreenViewController$lockDevice, _typeEncoding); }} }
-#line 101 "Tweak.x"
+#line 104 "Tweak.x"
