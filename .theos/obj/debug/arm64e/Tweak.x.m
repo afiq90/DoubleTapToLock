@@ -1,6 +1,7 @@
 #line 1 "Tweak.x"
 #import <Cephei/HBPreferences.h>
 
+#define PLIST_PATH @"/var/mobile/Library/Preferences/com.afiq.dtlpreferences.plist"
 
 @interface SBIconController: UIViewController
 +(id)sharedInstance;
@@ -20,6 +21,12 @@
 UITapGestureRecognizer *tapGesture;
 BOOL isEnabled;
 HBPreferences *prefs;
+
+NSInteger prefsVariable;
+static void loadPrefs() {
+	NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:PLIST_PATH];
+	prefsVariable = [[prefs objectForKey:@"isEnabled"] intValue];
+}
 
 
 #include <substrate.h>
@@ -42,10 +49,10 @@ HBPreferences *prefs;
 #define _LOGOS_RETURN_RETAINED
 #endif
 
-@class SpringBoard; @class SBIconController; @class SBHomeScreenViewController; 
+@class SpringBoard; @class SBHomeScreenViewController; @class SBIconController; 
 static void (*_logos_orig$_ungrouped$SBHomeScreenViewController$viewDidLoad)(_LOGOS_SELF_TYPE_NORMAL SBHomeScreenViewController* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$SBHomeScreenViewController$viewDidLoad(_LOGOS_SELF_TYPE_NORMAL SBHomeScreenViewController* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$SBHomeScreenViewController$lockDevice(_LOGOS_SELF_TYPE_NORMAL SBHomeScreenViewController* _LOGOS_SELF_CONST, SEL); 
-static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBIconController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBIconController"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SpringBoard(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SpringBoard"); } return _klass; }
-#line 23 "Tweak.x"
+static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SpringBoard(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SpringBoard"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBIconController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBIconController"); } return _klass; }
+#line 30 "Tweak.x"
 
 
 static void _logos_method$_ungrouped$SBHomeScreenViewController$viewDidLoad(_LOGOS_SELF_TYPE_NORMAL SBHomeScreenViewController* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
@@ -75,16 +82,16 @@ static void _logos_method$_ungrouped$SBHomeScreenViewController$viewDidLoad(_LOG
 	
 	
 
-	NSLog(@"Am I enabled two? %i", isEnabled);
 	
-	if (isEnabled) {
+	
+	if (prefsVariable == 1) {
 		
 		[redRectangle setBackgroundColor:[UIColor redColor]];
 		statusLabel.text = @"ON";
 	} else {
 		
 		[redRectangle setBackgroundColor:[UIColor greenColor]];
-		statusLabel.text = @"OFf";
+		statusLabel.text = @"OFF";
 	}
 
 	[redRectangle addSubview:statusLabel];
@@ -109,8 +116,14 @@ static void _logos_method$_ungrouped$SBHomeScreenViewController$lockDevice(_LOGO
 
 
 
-static __attribute__((constructor)) void _logosLocalCtor_a036efd8(int __unused argc, char __unused **argv, char __unused **envp) {
-	prefs = [[HBPreferences alloc] initWithIdentifier:@"com.afiq.dtlpreferences"];
-	[prefs registerBool:&isEnabled default:YES forKey:@"isEnabled"];
-	{Class _logos_class$_ungrouped$SBHomeScreenViewController = objc_getClass("SBHomeScreenViewController"); MSHookMessageEx(_logos_class$_ungrouped$SBHomeScreenViewController, @selector(viewDidLoad), (IMP)&_logos_method$_ungrouped$SBHomeScreenViewController$viewDidLoad, (IMP*)&_logos_orig$_ungrouped$SBHomeScreenViewController$viewDidLoad);{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'v'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$SBHomeScreenViewController, @selector(lockDevice), (IMP)&_logos_method$_ungrouped$SBHomeScreenViewController$lockDevice, _typeEncoding); }}
+static __attribute__((constructor)) void _logosLocalCtor_f3fcdf02(int __unused argc, char __unused **argv, char __unused **envp) {
+	
+	
+	
+	loadPrefs();
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("com.afiq.dtlpreferences/ReloadPrefs"), NULL, CFNotificationSuspensionBehaviorCoalesce);
+
 }
+static __attribute__((constructor)) void _logosLocalInit() {
+{Class _logos_class$_ungrouped$SBHomeScreenViewController = objc_getClass("SBHomeScreenViewController"); MSHookMessageEx(_logos_class$_ungrouped$SBHomeScreenViewController, @selector(viewDidLoad), (IMP)&_logos_method$_ungrouped$SBHomeScreenViewController$viewDidLoad, (IMP*)&_logos_orig$_ungrouped$SBHomeScreenViewController$viewDidLoad);{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'v'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$SBHomeScreenViewController, @selector(lockDevice), (IMP)&_logos_method$_ungrouped$SBHomeScreenViewController$lockDevice, _typeEncoding); }} }
+#line 101 "Tweak.x"

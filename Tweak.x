@@ -1,5 +1,6 @@
 #import <Cephei/HBPreferences.h>
 
+#define PLIST_PATH @"/var/mobile/Library/Preferences/com.afiq.dtlpreferences.plist"
 
 @interface SBIconController: UIViewController
 +(id)sharedInstance;
@@ -20,6 +21,12 @@ UITapGestureRecognizer *tapGesture;
 BOOL isEnabled;
 HBPreferences *prefs;
 
+NSInteger prefsVariable;
+static void loadPrefs() {
+	NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:PLIST_PATH];
+	prefsVariable = [[prefs objectForKey:@"isEnabled"] intValue];
+}
+
 %hook SBHomeScreenViewController
 
 -(void)viewDidLoad {
@@ -34,7 +41,7 @@ HBPreferences *prefs;
 	if(tapGesture == nil) {
 		tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(lockDevice)];
 		tapGesture.numberOfTapsRequired = 2;
-		[self.view addGestureRecognizer: tapGesture];
+		[self.view addGestureRecognizer:tapGesture];
 	}
 
 	// NSDictionary *bundleDefaults = [[NSUserDefaults standardUserDefaults] persistentDomainForName:@"com.afiq.dtlpreferences"];
@@ -49,9 +56,9 @@ HBPreferences *prefs;
 	// 	statusLabel.text = @"ON";
 	// }
 
-	NSLog(@"Am I enabled? %i", isEnabled);
+	// NSLog(@"Am I enabled? %i", prefsVariable);
 	
-	if (isEnabled) {
+	if (prefsVariable == 1) {
 		// tapGesture.enabled = NO;
 		[redRectangle setBackgroundColor:[UIColor redColor]];
 		statusLabel.text = @"ON";
@@ -84,7 +91,10 @@ HBPreferences *prefs;
 %end
 
 %ctor {
-	prefs = [[HBPreferences alloc] initWithIdentifier:@"com.afiq.dtlpreferences"];
-	[prefs registerBool:&isEnabled default:YES forKey:@"isEnabled"];
-	%init;
+	// prefs = [[HBPreferences alloc] initWithIdentifier:@"com.afiq.dtlpreferences"];
+	// [prefs registerBool:&isEnabled default:YES forKey:@"isEnabled"];
+	// %init;
+	loadPrefs();
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("com.afiq.dtlpreferences/ReloadPrefs"), NULL, CFNotificationSuspensionBehaviorCoalesce);
+
 }
