@@ -39,14 +39,19 @@ UITapGestureRecognizer *tapGesture;
 #define _LOGOS_RETURN_RETAINED
 #endif
 
-@class SBHomeScreenViewController; @class SpringBoard; @class SBIconController; 
+@class SBIconController; @class SpringBoard; @class SBHomeScreenViewController; 
 static void (*_logos_orig$_ungrouped$SBHomeScreenViewController$viewDidLoad)(_LOGOS_SELF_TYPE_NORMAL SBHomeScreenViewController* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$SBHomeScreenViewController$viewDidLoad(_LOGOS_SELF_TYPE_NORMAL SBHomeScreenViewController* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$SBHomeScreenViewController$lockDevice(_LOGOS_SELF_TYPE_NORMAL SBHomeScreenViewController* _LOGOS_SELF_CONST, SEL); 
-static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SpringBoard(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SpringBoard"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBIconController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBIconController"); } return _klass; }
+static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBIconController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBIconController"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SpringBoard(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SpringBoard"); } return _klass; }
 #line 20 "Tweak.x"
 
 static void _logos_method$_ungrouped$SBHomeScreenViewController$viewDidLoad(_LOGOS_SELF_TYPE_NORMAL SBHomeScreenViewController* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
 
 	_logos_orig$_ungrouped$SBHomeScreenViewController$viewDidLoad(self, _cmd);
+
+	UIView *redRectangle = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 200)];
+
+	UILabel *statusLabel = [[UILabel alloc] initWithFrame:redRectangle.frame];
+	[statusLabel setTextColor:[UIColor blackColor]];
 
 	if(tapGesture == nil) {
 		tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(lockDevice)];
@@ -56,14 +61,20 @@ static void _logos_method$_ungrouped$SBHomeScreenViewController$viewDidLoad(_LOG
 
 	NSDictionary *bundleDefaults = [[NSUserDefaults standardUserDefaults] persistentDomainForName:@"com.afiq.dtlpreferences"];
 	id isEnable = [bundleDefaults valueForKey:@"isEnable"];
+	NSLog(@"%@", isEnable);
 	if ([isEnable isEqual:@0]) {
 		tapGesture.enabled = NO;
-		
-		
+		[redRectangle setBackgroundColor:[UIColor redColor]];
+		statusLabel.text = @"OFF";
 	} else {
 		tapGesture.enabled = YES;
-		
+		[redRectangle setBackgroundColor:[UIColor greenColor]];
+		statusLabel.text = @"ON";
 	}
+
+	[redRectangle addSubview:statusLabel];
+	[self.view addSubview:redRectangle];
+
 
 }
 
@@ -84,4 +95,4 @@ static void _logos_method$_ungrouped$SBHomeScreenViewController$lockDevice(_LOGO
 
 static __attribute__((constructor)) void _logosLocalInit() {
 {Class _logos_class$_ungrouped$SBHomeScreenViewController = objc_getClass("SBHomeScreenViewController"); MSHookMessageEx(_logos_class$_ungrouped$SBHomeScreenViewController, @selector(viewDidLoad), (IMP)&_logos_method$_ungrouped$SBHomeScreenViewController$viewDidLoad, (IMP*)&_logos_orig$_ungrouped$SBHomeScreenViewController$viewDidLoad);{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'v'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$SBHomeScreenViewController, @selector(lockDevice), (IMP)&_logos_method$_ungrouped$SBHomeScreenViewController$lockDevice, _typeEncoding); }} }
-#line 59 "Tweak.x"
+#line 70 "Tweak.x"

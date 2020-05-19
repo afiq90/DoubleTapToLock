@@ -22,6 +22,11 @@ UITapGestureRecognizer *tapGesture;
 
 	%orig;
 
+	UIView *redRectangle = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 200)];
+
+	UILabel *statusLabel = [[UILabel alloc] initWithFrame:redRectangle.frame];
+	[statusLabel setTextColor:[UIColor blackColor]];
+
 	if(tapGesture == nil) {
 		tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(lockDevice)];
 		tapGesture.numberOfTapsRequired = 2;
@@ -30,14 +35,20 @@ UITapGestureRecognizer *tapGesture;
 
 	NSDictionary *bundleDefaults = [[NSUserDefaults standardUserDefaults] persistentDomainForName:@"com.afiq.dtlpreferences"];
 	id isEnable = [bundleDefaults valueForKey:@"isEnable"];
+	NSLog(@"%@", isEnable);
 	if ([isEnable isEqual:@0]) {
 		tapGesture.enabled = NO;
-		// [self lockDevice];
-		
+		[redRectangle setBackgroundColor:[UIColor redColor]];
+		statusLabel.text = @"OFF";
 	} else {
 		tapGesture.enabled = YES;
-		// [self reSpring];
+		[redRectangle setBackgroundColor:[UIColor greenColor]];
+		statusLabel.text = @"ON";
 	}
+
+	[redRectangle addSubview:statusLabel];
+	[self.view addSubview:redRectangle];
+
 
 }
 
