@@ -52,9 +52,9 @@ static void loadPrefs() {
 #define _LOGOS_RETURN_RETAINED
 #endif
 
-@class SBIconController; @class SpringBoard; @class SBHomeScreenViewController; 
+@class SBIconController; @class SBHomeScreenViewController; @class SpringBoard; 
 static void (*_logos_orig$_ungrouped$SBHomeScreenViewController$viewDidLoad)(_LOGOS_SELF_TYPE_NORMAL SBHomeScreenViewController* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$SBHomeScreenViewController$viewDidLoad(_LOGOS_SELF_TYPE_NORMAL SBHomeScreenViewController* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$SBHomeScreenViewController$lockDevice(_LOGOS_SELF_TYPE_NORMAL SBHomeScreenViewController* _LOGOS_SELF_CONST, SEL); 
-static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBIconController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBIconController"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SpringBoard(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SpringBoard"); } return _klass; }
+static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SpringBoard(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SpringBoard"); } return _klass; }static __inline__ __attribute__((always_inline)) __attribute__((unused)) Class _logos_static_class_lookup$SBIconController(void) { static Class _klass; if(!_klass) { _klass = objc_getClass("SBIconController"); } return _klass; }
 #line 33 "Tweak.x"
 
 
@@ -67,7 +67,7 @@ static void _logos_method$_ungrouped$SBHomeScreenViewController$viewDidLoad(_LOG
 	UILabel *statusLabel = [[UILabel alloc] initWithFrame:redRectangle.frame];
 	[statusLabel setTextColor:[UIColor blackColor]];
 
-	if(tapGesture == nil) {
+	if(tapGesture == nil && isEnabled) {
 		tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(lockDevice)];
 		tapGesture.numberOfTapsRequired = 2;
 		[self.view addGestureRecognizer:tapGesture];
@@ -124,7 +124,7 @@ static __attribute__((constructor)) void _logosLocalCtor_3b78f0bd(int __unused a
 	
 	
 	loadPrefs();
-    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("com.afiq.dtlpreferences.ReloadPrefs"), NULL, CFNotificationSuspensionBehaviorCoalesce);
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("com.afiq.dtlpreferences/ReloadPrefs"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 
 }
 static __attribute__((constructor)) void _logosLocalInit() {

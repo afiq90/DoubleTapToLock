@@ -6,7 +6,9 @@
   /Users/afiqhamdan/theos/vendor/include/CoreFoundation/CFLogUtilities.h \
   DTLRootListController.h \
   /Users/afiqhamdan/theos/vendor/include/Preferences/PSListController.h \
-  /Users/afiqhamdan/theos/vendor/include/Preferences/PSViewController.h
+  /Users/afiqhamdan/theos/vendor/include/Preferences/PSViewController.h \
+  /Users/afiqhamdan/theos/vendor/include/Preferences/PSSpecifier.h \
+  /Users/afiqhamdan/theos/vendor/include/Preferences/PSTableCell.h
 
 /Users/afiqhamdan/theos/Prefix.pch:
 
@@ -23,3 +25,7 @@ DTLRootListController.h:
 /Users/afiqhamdan/theos/vendor/include/Preferences/PSListController.h:
 
 /Users/afiqhamdan/theos/vendor/include/Preferences/PSViewController.h:
+
+/Users/afiqhamdan/theos/vendor/include/Preferences/PSSpecifier.h:
+
+/Users/afiqhamdan/theos/vendor/include/Preferences/PSTableCell.h:

@@ -41,7 +41,7 @@ static void loadPrefs() {
 	UILabel *statusLabel = [[UILabel alloc] initWithFrame:redRectangle.frame];
 	[statusLabel setTextColor:[UIColor blackColor]];
 
-	if(tapGesture == nil) {
+	if(tapGesture == nil && isEnabled) {
 		tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(lockDevice)];
 		tapGesture.numberOfTapsRequired = 2;
 		[self.view addGestureRecognizer:tapGesture];
@@ -98,6 +98,6 @@ static void loadPrefs() {
 	// [prefs registerBool:&isEnabled default:YES forKey:@"isEnabled"];
 	// %init;
 	loadPrefs();
-    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("com.afiq.dtlpreferences.ReloadPrefs"), NULL, CFNotificationSuspensionBehaviorCoalesce);
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("com.afiq.dtlpreferences/ReloadPrefs"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 
 }

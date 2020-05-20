@@ -22,7 +22,7 @@
 			<key>label</key>
 			<string>Enable</string>
 			<key>PostNotification</key>
-			<string>com.afiq.dtlpreferences.ReloadPrefs</string>
+			<string>com.afiq.dtlpreferences/ReloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
