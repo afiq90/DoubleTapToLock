@@ -24,22 +24,23 @@
 	}
 }
 
--(id) readPreferenceValue:(PSSpecifier *)specifier {
-		NSDictionary *prefsPlist = [NSDictionary dictionaryWithContentsOfFile:[NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", [specifier.properties objectForKey:@"defaults"]]];
-		if (![prefsPlist objectForKey:[specifier.properties objectForKey:@"key"]]) {
-			return [specifier.properties objectForKey:@"default"];
-		}
-		return [prefsPlist objectForKey:[specifier.properties objectForKey:@"key"]];
+- (id)readPreferenceValue:(PSSpecifier*)specifier {
+	NSString *path = [NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", specifier.properties[@"defaults"]];
+	NSMutableDictionary *settings = [NSMutableDictionary dictionary];
+	[settings addEntriesFromDictionary:[NSDictionary dictionaryWithContentsOfFile:path]];
+	return (settings[specifier.properties[@"key"]]) ?: specifier.properties[@"default"];
 }
 
--(void) setPreferenceValue:(id)value specifier:(PSSpecifier *)specifier {
-	NSMutableDictionary *prefsPlist = [[NSMutableDictionary alloc] initWithContentsOfFile:[NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", [specifier.properties objectForKey:@"defaults"]]];
-	[prefsPlist setObject:value forKey:[specifier.properties objectForKey:@"key"]];
-	[prefsPlist writeToFile:[NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", [specifier.properties objectForKey:@"defaults"]] atomically:1];
-	if ([specifier.properties objectForKey:@"PostNotification"]) {
-		CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (CFStringRef)[specifier.properties objectForKey:@"PostNotification"], NULL, NULL, YES);
+- (void)setPreferenceValue:(id)value specifier:(PSSpecifier*)specifier {
+	NSString *path = [NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", specifier.properties[@"defaults"]];
+	NSMutableDictionary *settings = [NSMutableDictionary dictionary];
+	[settings addEntriesFromDictionary:[NSDictionary dictionaryWithContentsOfFile:path]];
+	[settings setObject:value forKey:specifier.properties[@"key"]];
+	[settings writeToFile:path atomically:YES];
+	CFStringRef notificationName = (__bridge CFStringRef)specifier.properties[@"PostNotification"];
+	if (notificationName) {
+		CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), notificationName, NULL, NULL, YES);
 	}
-	[super setPreferenceValue:value specifier:specifier];
 }
 
 @end

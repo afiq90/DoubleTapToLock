@@ -8,21 +8,21 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>After making a changes, please respring for tweak to take effect.</string>
+			<string>Please turn on to enable the tweak.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
+			<key>label</key>
+			<string>Enabled</string>
 			<key>defaults</key>
 			<string>com.afiq.dtlpreferences</string>
 			<key>key</key>
 			<string>isEnabled</string>
-			<key>label</key>
-			<string>Enable</string>
 			<key>PostNotification</key>
 			<string>com.afiq.dtlpreferences/ReloadPrefs</string>
+			<key>default</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>cell</key>
